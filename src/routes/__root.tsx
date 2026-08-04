@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "XAUUSD Live — Cotação Ouro em Tempo Real (Dukascopy)" },
+      { name: "description", content: "Dashboard de cotação XAUUSD em tempo real com abertura do dia, fechamento, máxima e mínima do dia anterior via dados tick da Dukascopy." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "XAUUSD Live — Cotação Ouro em Tempo Real (Dukascopy)" },
+      { property: "og:description", content: "Dashboard de cotação XAUUSD em tempo real com abertura do dia, fechamento, máxima e mínima do dia anterior via dados tick da Dukascopy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "XAUUSD Live — Cotação Ouro em Tempo Real (Dukascopy)" },
+      { name: "twitter:description", content: "Dashboard de cotação XAUUSD em tempo real com abertura do dia, fechamento, máxima e mínima do dia anterior via dados tick da Dukascopy." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b27b3502-aa82-4beb-b091-d93a6fe5ee93/id-preview-59a336a7--d2490398-f4b4-4f1e-ae33-04df8e38956a.lovable.app-1785851758466.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b27b3502-aa82-4beb-b091-d93a6fe5ee93/id-preview-59a336a7--d2490398-f4b4-4f1e-ae33-04df8e38956a.lovable.app-1785851758466.png" },
     ],
     links: [
       {

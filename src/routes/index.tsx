@@ -12,10 +12,10 @@ export const Route = createFileRoute("/")({
         content:
           "Dashboard de cotação XAUUSD em tempo real com abertura do dia, fechamento, máxima e mínima do dia anterior via dados tick da Dukascopy.",
       },
-      { property: "og:title", content: "XAUUSD Live — Cotação Ouro em Tempo Real" },
+      { property: "og:title", content: "XAUUSD Live — Cotação Ouro em Tempo Real (Dukascopy)" },
       {
         property: "og:description",
-        content: "Bid/ask ao vivo, OHLC do dia anterior e gráfico intradiário do ouro.",
+        content: "Dashboard de cotação XAUUSD em tempo real com abertura do dia, fechamento, máxima e mínima do dia anterior via dados tick da Dukascopy.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
