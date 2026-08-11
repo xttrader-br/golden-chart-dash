@@ -6,7 +6,10 @@ export type Candle = {
   high: number;
   low: number;
   close: number;
+  volume: number;
 };
+
+export type FibLevel = { pct: number; price: number; zone: "compra" | "venda" | "neutro" };
 
 export type Snapshot = {
   fetchedAt: number;
@@ -15,10 +18,14 @@ export type Snapshot = {
   spread: number;
   mid: number;
   lastTickAt: number;
-  today: { open: number; high: number; low: number; date: number };
+  today: { open: number; high: number; low: number; date: number; range: number };
   previous: { open: number; high: number; low: number; close: number; date: number };
+  vwap: { week: number; weekStart: number; previousWeek: number; previousWeekEnd: number };
+  range: { avg10: number; days: number; usedPct: number };
+  fib: { anchor: number; levels: FibLevel[]; position: number; bias: string };
   intraday: Candle[];
 };
+
 
 const FEED = "https://freeserv.dukascopy.com/2.0/index.php";
 
