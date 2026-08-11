@@ -27,6 +27,29 @@ export const Route = createFileRoute("/")({
 const fmt = (n: number | undefined, d = 3) =>
   n === undefined || Number.isNaN(n) ? "—" : n.toFixed(d);
 
+const pctTone = (p: number | undefined) =>
+  p === undefined
+    ? "text-muted-foreground"
+    : p <= 50
+      ? "text-success"
+      : p <= 80
+        ? "text-warning"
+        : p <= 90
+          ? "text-caution"
+          : "text-destructive";
+
+const pctBg = (p: number | undefined) =>
+  p === undefined
+    ? "bg-muted"
+    : p <= 50
+      ? "bg-success"
+      : p <= 80
+        ? "bg-warning"
+        : p <= 90
+          ? "bg-caution"
+          : "bg-destructive";
+
+
 function Stat({
   label,
   value,
@@ -178,6 +201,117 @@ function Dashboard() {
         </section>
 
         <h2 className="mt-8 text-xs uppercase tracking-widest text-muted-foreground">
+          VWAP semanal (somente dias úteis)
+        </h2>
+        <section className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat
+            label="VWAP semana atual"
+            value={fmt(data?.vwap.week)}
+            tone="gold"
+            sub={
+              data
+                ? `desde ${new Date(data.vwap.weekStart).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`
+                : undefined
+            }
+          />
+          <Stat
+            label="VWAP semana anterior (fech.)"
+            value={fmt(data?.vwap.previousWeek)}
+            sub={
+              data
+                ? `até ${new Date(data.vwap.previousWeekEnd).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`
+                : undefined
+            }
+          />
+          <Stat
+            label="Preço vs VWAP semana"
+            value={
+              data && data.vwap.week
+                ? `${data.bid - data.vwap.week >= 0 ? "+" : ""}${(data.bid - data.vwap.week).toFixed(3)}`
+                : "—"
+            }
+            tone={data && data.bid >= (data.vwap.week || 0) ? "up" : "down"}
+            sub={data && data.bid >= (data.vwap.week || 0) ? "acima da VWAP" : "abaixo da VWAP"}
+          />
+          <Stat
+            label="Range médio 10 dias"
+            value={fmt(data?.range.avg10)}
+            sub={data ? `${data.range.days} dias úteis` : undefined}
+          />
+        </section>
+
+        <h2 className="mt-8 text-xs uppercase tracking-widest text-muted-foreground">
+          Consumo do range diário
+        </h2>
+        <div className="mt-3 rounded-md border border-border bg-card p-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                Range de hoje percorrido
+              </div>
+              <div className={`mt-1 font-mono text-3xl tabular-nums ${pctTone(data?.range.usedPct)}`}>
+                {data ? `${data.range.usedPct.toFixed(1)}%` : "—"}
+              </div>
+            </div>
+            <div className="font-mono text-xs text-muted-foreground">
+              {fmt(data?.today.range)} de {fmt(data?.range.avg10)} pts médios
+            </div>
+          </div>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className={`h-full ${pctBg(data?.range.usedPct)}`}
+              style={{ width: `${Math.min(100, data?.range.usedPct ?? 0)}%` }}
+            />
+          </div>
+          <div className="mt-2 text-xs text-muted-foreground">
+            até 50% verde · 51–80% amarelo · 81–90% laranja · acima de 90% vermelho (exaustão do
+            movimento diário)
+          </div>
+        </div>
+
+        <h2 className="mt-8 text-xs uppercase tracking-widest text-muted-foreground">
+          Fibonacci do range médio (10 dias) · abertura = 50%
+        </h2>
+        <div className="mt-3 rounded-md border border-border bg-card p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="font-mono text-sm">
+              Posição atual:{" "}
+              <span className={data && data.fib.position < 50 ? "text-success" : "text-destructive"}>
+                {data ? `${data.fib.position.toFixed(1)}%` : "—"}
+              </span>
+            </div>
+            <div className="text-xs text-muted-foreground">{data?.fib.bias ?? "—"}</div>
+          </div>
+          <div className="mt-4 space-y-1.5">
+            {(data?.fib.levels ?? []).slice().reverse().map((l) => {
+              const active = data ? Math.abs(data.fib.position - l.pct) <= 10 : false;
+              return (
+                <div
+                  key={l.pct}
+                  className={`flex items-center justify-between rounded border px-3 py-2 font-mono text-sm ${
+                    active ? "border-primary bg-primary/10" : "border-border"
+                  }`}
+                >
+                  <span className="text-muted-foreground">{l.pct}%</span>
+                  <span className="tabular-nums">{l.price.toFixed(3)}</span>
+                  <span
+                    className={`text-[11px] uppercase tracking-widest ${
+                      l.zone === "compra"
+                        ? "text-success"
+                        : l.zone === "venda"
+                          ? "text-destructive"
+                          : "text-primary"
+                    }`}
+                  >
+                    {l.zone === "compra" ? "zona de compra" : l.zone === "venda" ? "zona de venda" : "abertura"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <h2 className="mt-8 text-xs uppercase tracking-widest text-muted-foreground">
           Dia anterior
           {data ? ` — ${new Date(data.previous.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}` : ""}
         </h2>
@@ -187,6 +321,7 @@ function Dashboard() {
           <Stat label="Máxima" value={fmt(data?.previous.high)} tone="up" />
           <Stat label="Mínima" value={fmt(data?.previous.low)} tone="down" />
         </section>
+
 
         <h2 className="mt-8 text-xs uppercase tracking-widest text-muted-foreground">
           Intradiário M1 · últimas horas
