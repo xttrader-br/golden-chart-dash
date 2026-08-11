@@ -27,6 +27,29 @@ export const Route = createFileRoute("/")({
 const fmt = (n: number | undefined, d = 3) =>
   n === undefined || Number.isNaN(n) ? "—" : n.toFixed(d);
 
+const pctTone = (p: number | undefined) =>
+  p === undefined
+    ? "text-muted-foreground"
+    : p <= 50
+      ? "text-success"
+      : p <= 80
+        ? "text-warning"
+        : p <= 90
+          ? "text-caution"
+          : "text-destructive";
+
+const pctBg = (p: number | undefined) =>
+  p === undefined
+    ? "bg-muted"
+    : p <= 50
+      ? "bg-success"
+      : p <= 80
+        ? "bg-warning"
+        : p <= 90
+          ? "bg-caution"
+          : "bg-destructive";
+
+
 function Stat({
   label,
   value,
